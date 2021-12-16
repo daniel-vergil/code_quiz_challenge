@@ -23,7 +23,7 @@ var selectors = {
     count: 60,
     resultText: document.querySelector(".result h2")
 };
-
+var results = [];
 var questions = {
     question1: "Commonly used data types do not include: ",
     question2: "The condition in an if / else statement is enclosed with ____________.",
@@ -237,9 +237,14 @@ var startTimer = function () {
 }
 
 var scorePage = function () {
+    if (document.querySelector(".answer-choices-list")) {
+        document.querySelector(".answer-choices-list").remove();
+    }
+    if (document.querySelector(".result")) {
+        document.querySelector(".result").remove();
+    }
+   
     selectors.quizQuestions.textContent = "All done!";
-    document.querySelector(".answer-choices-list").remove();
-    document.querySelector(".result").remove();
     var scoreText = document.createElement("p");
     var enterInitialsText = document.createElement("p");
     var enterInitialsTextBox = document.createElement("input");
@@ -261,8 +266,15 @@ var scorePage = function () {
 }
 
 var saveScoreInLocalStorage = function (initials, points) {
-    const highScore = localStorage.setItem(initials, JSON.stringify(points));
+    var highScores = {
+        initials: initials,
+        score: points
+    }
+    results.push(highScores);
+    localStorage.setItem("results", JSON.stringify(results));
 }
+
+
 
 selectors.startQuizBtn.addEventListener("click", function () {
     selectors.quizQuestions.textContent = questions.question1;
