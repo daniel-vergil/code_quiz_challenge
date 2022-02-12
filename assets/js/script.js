@@ -21,9 +21,10 @@ var selectors = {
     correctAnswer: document.querySelector(".result"),
     correctAnswerForQn1: null,
     count: 60,
-    resultText: document.querySelector(".result h2")
+    resultText: document.querySelector(".result h2"),
+    highScoresLink: document.querySelector(".high-score-link")
 };
-var results = [];
+
 var questions = {
     question1: "Commonly used data types do not include: ",
     question2: "The condition in an if / else statement is enclosed with ____________.",
@@ -37,6 +38,11 @@ var answer2 = ["1. quotes", "2. curly brackets", "3. parenthesis", "4. square br
 var answer3 = ["1. numbers and strings", "2. other arrrays", "3. booleans", "4. all of the above"];
 var answer4 = ["1. commas", "2. curly brackets", "3. quotes", "4. parenthesis"];
 var answer5 = ["1. JavaScript", "2. terminal/bash", "3. for loops", "4. console.log"];
+
+var highScores = {
+    initials: '',
+    score: 0
+}
 
 var displayAnswers = function () {
     selectors.ansChoicesforQuestion1 = document.createElement("ul");
@@ -68,19 +74,18 @@ var displayAnswers = function () {
     selectors.answerChoiceButton3.textContent = answer1[2];
     selectors.answerChoiceButton4.textContent = answer1[3];
 }
-var questionNumber;
+var questionNumber = 1;
 var getQuestionNumber = function () {
-   
+
     if (document.querySelector(".quiz-instructions h1").textContent == questions.question1) {
-        questionNumber = 2;
+        questionNumber++;
     } else if (document.querySelector(".quiz-instructions h1").textContent == questions.question2) {
-        questionNumber = 3;
+        questionNumber++;
     } else if (document.querySelector(".quiz-instructions h1").textContent == questions.question3) {
-        questionNumber = 4;
+        questionNumber++;
     } else if (document.querySelector(".quiz-instructions h1").textContent == questions.question4) {
-        questionNumber = 5;
+        questionNumber++;
     }
-    console.log(questionNumber);
     return questionNumber;
 }
 
@@ -127,9 +132,8 @@ var displayIncorrectResult = function () {
 }
 
 var lastQnFlag = false;
-var displaySubsequentQuestions = function(questionNumber) {
+var displaySubsequentQuestions = function (questionNumber) {
     if (questionNumber == 2) {
-        console.log(questions.question2);
         selectors.quizQuestions.textContent = questions.question2;
         var j = 1;
         var selector;
@@ -138,9 +142,9 @@ var displaySubsequentQuestions = function(questionNumber) {
             document.querySelector(selector).textContent = answer2[i];
             j++;
         }
-        document.querySelector(".answer-choices-list li:nth-child(3) button").className = "correct-answer-for-qn1";
         document.querySelector(".answer-choices-list li:nth-child(1) button").className = "wrong-answer";
         document.querySelector(".answer-choices-list li:nth-child(2) button").className = "wrong-answer";
+        document.querySelector(".answer-choices-list li:nth-child(3) button").className = "correct-answer-for-qn1";
         document.querySelector(".answer-choices-list li:nth-child(4) button").className = "wrong-answer";
         selectors.correctAnswer.style.borderTop = "none";
         selectors.resultText.textContent = " ";
@@ -151,7 +155,6 @@ var displaySubsequentQuestions = function(questionNumber) {
             });
         });
     } else if (questionNumber == 3) {
-        console.log(questions.question3);
         selectors.quizQuestions.textContent = questions.question3;
         var j = 1;
         var selector;
@@ -162,11 +165,17 @@ var displaySubsequentQuestions = function(questionNumber) {
         }
         document.querySelector(".answer-choices-list li:nth-child(1) button").className = "wrong-answer";
         document.querySelector(".answer-choices-list li:nth-child(2) button").className = "wrong-answer";
-        document.querySelector(".answer-choices-list li:nth-child(3) button").className = "wrong-answer";
         document.querySelector(".answer-choices-list li:nth-child(4) button").className = "correct-answer-for-qn1";
+        document.querySelector(".answer-choices-list li:nth-child(3) button").className = "wrong-answer";
         selectors.correctAnswer.style.borderTop = "none";
         selectors.resultText.textContent = " ";
-       
+        alert('something');
+        document.querySelector(".correct-answer-for-qn1").addEventListener("click", displayCorrectResult);
+        document.querySelectorAll(".wrong-answer").forEach(item => {
+            item.addEventListener("click", event => {
+                displayIncorrectResult();
+            });
+        });
     } else if (questionNumber == 4) {
         document.querySelector(".correct-answer-for-qn1").addEventListener("click", displayCorrectResult);
         document.querySelectorAll(".wrong-answer").forEach(item => {
@@ -174,7 +183,6 @@ var displaySubsequentQuestions = function(questionNumber) {
                 displayIncorrectResult();
             });
         });
-        console.log(questions.question4);
         selectors.quizQuestions.textContent = questions.question4;
         j = 1;
         var selector;
@@ -196,7 +204,6 @@ var displaySubsequentQuestions = function(questionNumber) {
             });
         });
     } else if (questionNumber == 5) {
-        console.log(questions.question5);
         selectors.quizQuestions.textContent = questions.question5;
         lastQnFlag = true;
         j = 1;
@@ -243,37 +250,48 @@ var scorePage = function () {
     if (document.querySelector(".result")) {
         document.querySelector(".result").remove();
     }
-   
+
     selectors.quizQuestions.textContent = "All done!";
     var scoreText = document.createElement("p");
     var enterInitialsText = document.createElement("p");
-    var enterInitialsTextBox = document.createElement("input");
-    enterInitialsTextBox.setAttribute('type', 'text');
-    enterInitialsTextBox.setAttribute('value', ' ');
-    var submitButton = document.createElement("button");
-    selectors.quizSection.appendChild(scoreText);
-    selectors.quizSection.appendChild(enterInitialsText);
-    selectors.quizSection.appendChild(enterInitialsTextBox);
-    var submitScoreBtn = selectors.quizSection.appendChild(submitButton);
-    selectors.quizQuestions.textContent = "All done!";
-    document.querySelector(".quiz-instructions p:nth-of-type(1)").textContent = "Your final score is " + points + ".";
-    document.querySelector(".quiz-instructions p:nth-of-type(2)").textContent = "Enter initials: ";
-    submitScoreBtn.textContent = "Submit";
-    submitScoreBtn.className = "submitInitialsButton";
-    document.querySelector(".submitInitialsButton").addEventListener("click", function () {
-        saveScoreInLocalStorage(document.querySelector(".quiz-instructions input").value, points);
-    });
+    if (!document.querySelector(".submitInitialsButton")) {
+        selectors.timer.textContent = 0;
+        var enterInitialsTextBox = document.createElement("input");
+        enterInitialsTextBox.setAttribute('type', 'text');
+        enterInitialsTextBox.setAttribute('value', ' ');
+        enterInitialsTextBox.className = 'initials-input';
+        var submitButton = document.createElement("button");
+        selectors.quizSection.appendChild(scoreText);
+        selectors.quizSection.appendChild(enterInitialsText);
+        selectors.quizSection.appendChild(enterInitialsTextBox);
+        var submitScoreBtn = selectors.quizSection.appendChild(submitButton);
+        selectors.quizQuestions.textContent = "All done!";
+        document.querySelector(".quiz-instructions p:nth-of-type(1)").textContent = "Your final score is " + points + ".";
+        document.querySelector(".quiz-instructions p:nth-of-type(2)").textContent = "Enter initials: ";
+        submitScoreBtn.textContent = "Submit";
+        submitScoreBtn.className = "submitInitialsButton";
+        document.querySelector(".submitInitialsButton").addEventListener("click", function () {
+            saveScoreInLocalStorage(document.querySelector(".initials-input").value, points);
+        }, {
+            once: true
+        });
+    }
+
 }
 
 var saveScoreInLocalStorage = function (initials, points) {
-    var highScores = {
-        initials: initials,
-        score: points
+    highScores.initials = initials;
+    highScores.score = points;
+    if (localStorage.getItem('results')) {
+        var results = JSON.parse(localStorage.getItem('results'));
+        results.push(highScores);
+        localStorage.setItem('results', JSON.stringify(results));
+    } else {
+        var results = [];
+        results.push(highScores);
+        localStorage.setItem('results', JSON.stringify(results));
     }
-    results.push(highScores);
-    localStorage.setItem("results", JSON.stringify(results));
 }
-
 
 
 selectors.startQuizBtn.addEventListener("click", function () {
@@ -281,12 +299,46 @@ selectors.startQuizBtn.addEventListener("click", function () {
     displayAnswers();
     selectors.instructions.remove();
     selectors.startQuizBtn.remove();
-    var count = 60;
-    // startTimer();
+    startTimer();
     document.querySelector(".correct-answer-for-qn1").addEventListener("click", displayCorrectResult);
     document.querySelectorAll(".wrong-answer").forEach(item => {
         item.addEventListener("click", event => {
             displayIncorrectResult();
         });
     });
+});
+
+var displayHighScores = () => {
+    if (document.querySelector(".answer-choices-list")) {
+        document.querySelector(".answer-choices-list").remove();
+    }
+    if (document.querySelector(".result")) {
+        document.querySelector(".result").remove();
+    }
+    if (document.querySelector(".quiz-instructions")) {
+        document.querySelector(".quiz-instructions").remove();
+    }
+    selectors.timer.textContent = 0;
+    var highScoreList = document.createElement("ol");
+    highScoreList.className = 'highScoreList';
+    document.querySelector('body').appendChild(highScoreList);
+    var scoresList = localStorage.getItem('results');
+    var jsonScoresList = JSON.parse(scoresList);
+
+    var sortedScoresList = jsonScoresList.sort(function (a, b) {
+        return a.score - b.score;
+    });
+    var i = sortedScoresList.length - 1;
+    while (i >= 0) {
+        var scores = document.createElement("li");
+        scores.textContent = sortedScoresList[i].initials.toUpperCase() + "   -   " + sortedScoresList[i].score;
+        highScoreList.appendChild(scores);
+        i--;
+    }
+}
+
+selectors.highScoresLink.addEventListener("click", function () {
+    displayHighScores();
+}, {
+    once: true
 });
