@@ -1,3 +1,86 @@
-header h1 {
-    color: brown;
+.high-score {
+display: flex;
+flex-wrap: wrap;
+flex-direction: row;
+justify-content: space-between;
+}
+
+.high-score a {
+   color: purple;
+   text-decoration: none;
+   font-size: 20px;
+   padding: 25px;
+}
+
+body p {
+    font-size: 20px;
+    padding: 25px;
+}
+
+.quiz-instructions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;  
+    width: 50%;
+    padding: 0px 300px;
+    margin: 0px;
+    text-align: center;
+}
+
+.quiz-instructions p {
+    padding: 0px;
+    margin: 0px 0px 20px 0px;
+    justify-content: center;  
+    text-align: center;
+}
+
+.start-quiz-btn, .submitInitialsButton {
+   display: flex;
+   flex-wrap: wrap;
+   font-size: 18px;
+   background-color: purple;
+   color: white;
+   position: relative;
+   justify-content: center;
+}
+
+.answer-choices-list button{
+    display: flex;  
+    justify-content: left;  
+    font-size: 20px;
+    margin: 10px;
+    background-color: purple;
+    color: white;
+}
+
+.quiz-instructions {
+    flex-direction: column;
+    padding: 0px 0px 0px 300px;
+}
+
+.answer-choices-list {
+    list-style: none;
+}
+
+.answer-choices-list button:hover,
+.start-quiz-btn:hover {
+    background-color: pink;
+    cursor: pointer;
+} 
+
+.result {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;  
+    width: 50%;
+    padding: 0px 300px;
+    margin: 0px;
+    font-style: italic;
+    color: gray;
+}
+
+.highScoreList li{
+    font-weight: bolder;
+    padding: 10px;
+    color: purple;
 }
