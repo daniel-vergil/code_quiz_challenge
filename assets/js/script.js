@@ -169,7 +169,6 @@ var displaySubsequentQuestions = function (questionNumber) {
         document.querySelector(".answer-choices-list li:nth-child(3) button").className = "wrong-answer";
         selectors.correctAnswer.style.borderTop = "none";
         selectors.resultText.textContent = " ";
-        alert('something');
         document.querySelector(".correct-answer-for-qn1").addEventListener("click", displayCorrectResult);
         document.querySelectorAll(".wrong-answer").forEach(item => {
             item.addEventListener("click", event => {
