@@ -271,6 +271,7 @@ var scorePage = function () {
         submitScoreBtn.className = "submitInitialsButton";
         document.querySelector(".submitInitialsButton").addEventListener("click", function () {
             saveScoreInLocalStorage(document.querySelector(".initials-input").value, points);
+            alert('Saved your scores in localStorage');
         }, {
             once: true
         });
